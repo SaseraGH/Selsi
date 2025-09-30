@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Hitungan Cinta</title>
+  <style>
+    body {
+      font-family: "Comic Sans MS", cursive, sans-serif;
+      text-align: center;
+      padding: 50px;
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+      color: #fff;
+    }
+    h1 {
+      font-size: 36px;
+      margin-bottom: 10px;
+      text-shadow: 2px 2px 6px rgba(0,0,0,0.2);
+    }
+    p {
+      font-size: 20px;
+      margin-bottom: 30px;
+    }
+    #result {
+      font-size: 28px;
+      font-weight: bold;
+      background: rgba(255, 255, 255, 0.2);
+      padding: 20px;
+      border-radius: 20px;
+      display: inline-block;
+      box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+    }
+    .heart {
+      font-size: 60px;
+      color: #ff4b6e;
+      animation: pulse 1s infinite;
+      margin: 20px 0;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+  </style>
+</head>
+<body>
+  <h1>💖 Hitungan Cinta Kita 💖</h1>
+  <p>Sejak pertama kali berbicara (22 September 2025)</p>
+  <div class="heart">❤️</div>
+  <div id="result"></div>
+
+  <script>
+    function updateTime() {
+      const startDate = new Date("2025-09-22T00:00:00");
+      const now = new Date();
+      const diff = now - startDate;
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((diff / (1000 * 60)) % 60);
+      const seconds = Math.floor((diff / 1000) % 60);
+
+      document.getElementById("result").innerHTML =
+        days + " hari<br>" +
+        hours + " jam<br>" +
+        minutes + " menit<br>" +
+        seconds + " detik 💕";
+    }
+
+    setInterval(updateTime, 1000);
+    updateTime();
+  </script>
+</body>
+</html>
