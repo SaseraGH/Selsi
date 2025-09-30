@@ -1,4 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Pastikan variabel 'database' sudah didefinisikan di <script> di index.html!
+    if (typeof database === 'undefined') {
+        console.error("ERROR: Variabel 'database' Firebase tidak ditemukan. Pastikan Anda sudah menginisialisasi Firebase di index.html.");
+        return;
+    }
+
     // --- Bagian 1: Timer Waktu Nyata ---
     // GANTI TANGGAL INI dengan tanggal anniversary Anda
     const startDate = new Date('2025-09-22T00:00:00'); 
@@ -8,7 +14,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const diff = now - startDate;
 
         if (diff < 0) {
-            // Jika tanggal di masa depan
             document.getElementById('timer-card').innerHTML = 
                 '<p style="color: var(--accent-color); font-weight: bold;">Countdown menuju hari spesial kita!</p>';
             return;
@@ -63,7 +68,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Bagian 3: Panel Catatan dan Firebase ---
     
-    // Asumsi: Variabel 'database' sudah didefinisikan di index.html
     const databaseRef = database.ref('romanticNotes'); 
     const noteForm = document.getElementById('note-form');
     const notesList = document.getElementById('notes-list');
@@ -107,9 +111,12 @@ document.addEventListener('DOMContentLoaded', () => {
             notesList.appendChild(noteCard);
         });
 
-        // Tambahkan event listener untuk tombol hapus
+        // Tambahkan event listener untuk tombol hapus (diperbaiki)
         notesList.querySelectorAll('.delete-btn').forEach(button => {
-            button.addEventListener('click', deleteNote);
+            button.addEventListener('click', (e) => {
+                const noteIdToDelete = e.target.dataset.id;
+                deleteNote(noteIdToDelete);
+            });
         });
     }
 
@@ -127,11 +134,17 @@ document.addEventListener('DOMContentLoaded', () => {
         const date = document.getElementById('note-date').value;
         const description = document.getElementById('note-description').value;
 
+        // Validasi dasar
+        if (!title || !date || !description) {
+            alert("Semua kolom harus diisi!");
+            return;
+        }
+
         const newNote = { 
             title, 
             date, 
             description,
-            timestamp: Date.now() // Untuk pengurutan
+            timestamp: Date.now() 
         };
 
         // Kirim data ke Firebase
@@ -141,13 +154,12 @@ document.addEventListener('DOMContentLoaded', () => {
             })
             .catch(error => {
                 console.error("Gagal menyimpan ke Firebase:", error);
-                alert("Gagal menyimpan catatan.");
+                alert("Gagal menyimpan catatan. Cek konsol browser Anda.");
             });
     });
 
     // HAPUS CATATAN
-    function deleteNote(e) {
-        const noteIdToDelete = e.target.dataset.id;
+    function deleteNote(noteIdToDelete) {
         
         if (confirm("Yakin ingin menghapus kenangan manis ini?")) {
             databaseRef.child(noteIdToDelete).remove()
